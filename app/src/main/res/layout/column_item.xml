@@ -13,8 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<FrameLayout
-    android:id="@+id/item_layout"
+<FrameLayout android:id="@+id/item_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -22,40 +21,59 @@
     android:paddingBottom="2dp"
     android:paddingLeft="6dp"
     android:paddingRight="6dp"
-    android:paddingTop="2dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:duplicateParentState="true"
-        android:foreground="@drawable/card_view_selector"
-        card_view:cardBackgroundColor="#ffffff"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="2dp"
+        android:layout_width="@dimen/card_width"
+        android:layout_height="@dimen/card_height"
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="3dp"
         card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"
+        android:layout_gravity="center_horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="12dp"
-                android:src="@drawable/ic_time"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="136dp">
+
+                <ImageView
+                    android:id="@+id/iv_card_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_margin="0dp"
+                    android:layout_marginBottom="32dp" />
+
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="4dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="1955"
+                    android:background="@drawable/rounded"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/text"
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="test test test"
-                android:textSize="16sp"/>
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textSize="12sp"
+                tools:text="Изобретение колеса" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

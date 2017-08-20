@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package ru.savchenko.andrey.timeline.test;
+package ru.savchenko.andrey.timeline.test.fragments;
 
 import android.animation.ObjectAnimator;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,24 +35,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.woxthebox.draglistview.BoardView;
-import com.woxthebox.draglistview.DragItem;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import ru.savchenko.andrey.timeline.R;
+import ru.savchenko.andrey.timeline.intefaces.BorderViewListener;
+import ru.savchenko.andrey.timeline.lib.BoardView;
+import ru.savchenko.andrey.timeline.lib.DragItem;
+import ru.savchenko.andrey.timeline.managers.CardManager;
+import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.test.adapter.ItemAdapter;
+import ru.savchenko.andrey.timeline.test.dialog.IntroDialog;
+import ru.savchenko.andrey.timeline.test.storage.DateChecker;
 
-public class BoardFragment extends Fragment {
+import static ru.savchenko.andrey.timeline.storage.Const.CORRECT_ANSWER;
+import static ru.savchenko.andrey.timeline.storage.Const.VICTORY;
 
+public class TimeLineFragment extends Fragment implements BorderViewListener {
+
+    private DateChecker dateChecker = new DateChecker();
     private static int sCreatedItems = 0;
     private BoardView mBoardView;
     private int mColumns;
+    private CardManager cardManager = new CardManager();
+    private ItemAdapter secondColumnItemAdapter;
+    private ImageView ivDeck;
+    private int counter;
+    private static Card dragCardEntity;
+    public static final int MARGIN_TOP = -30;
 
-    public static BoardFragment newInstance() {
-        return new BoardFragment();
+    public static TimeLineFragment newInstance() {
+        return new TimeLineFragment();
     }
 
     @Override
@@ -62,6 +82,7 @@ public class BoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.board_layout, container, false);
 
+        ivDeck = (ImageView) getActivity().findViewById(R.id.deck);
         mBoardView = (BoardView) view.findViewById(R.id.board_view);
         mBoardView.setSnapToColumnsWhenScrolling(true);
         mBoardView.setSnapToColumnWhenDragging(true);
@@ -69,29 +90,30 @@ public class BoardFragment extends Fragment {
         mBoardView.setCustomDragItem(new MyDragItem(getActivity(), R.layout.column_item));
         mBoardView.setSnapToColumnInLandscape(false);
         mBoardView.setColumnSnapPosition(BoardView.ColumnSnapPosition.CENTER);
+
         mBoardView.setBoardListener(new BoardView.BoardListener() {
             @Override
             public void onItemDragStarted(int column, int row) {
-                Toast.makeText(mBoardView.getContext(), "Start - column: " + column + " row: " + row, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onItemChangedPosition(int oldColumn, int oldRow, int newColumn, int newRow) {
-                Toast.makeText(mBoardView.getContext(), "Position changed - column: " + newColumn + " row: " + newRow, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onItemChangedColumn(int oldColumn, int newColumn) {
-                TextView itemCount1 = (TextView) mBoardView.getHeaderView(oldColumn).findViewById(R.id.item_count);
-                itemCount1.setText(String.valueOf(mBoardView.getAdapter(oldColumn).getItemCount()));
-                TextView itemCount2 = (TextView) mBoardView.getHeaderView(newColumn).findViewById(R.id.item_count);
-                itemCount2.setText(String.valueOf(mBoardView.getAdapter(newColumn).getItemCount()));
+
             }
 
             @Override
             public void onItemDragEnded(int fromColumn, int fromRow, int toColumn, int toRow) {
                 if (fromColumn != toColumn || fromRow != toRow) {
-                    Toast.makeText(mBoardView.getContext(), "End - column: " + toColumn + " row: " + toRow, Toast.LENGTH_SHORT).show();
+                    secondColumnItemAdapter.checkDate(toRow);
+                    Card card = cardManager.getUniqueCard();
+                    mBoardView.addItem(fromColumn, 0, card, true);
+                    dragCardEntity = card;
                 }
             }
         });
@@ -102,93 +124,125 @@ public class BoardFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Board");
-
-        addColumnList();
-        addColumnList();
-        addColumnList();
-        addColumnList();
-        addColumnList();
+        addFirstColumn();
+        addSecondColumn();
+        mBoardView.setListDragDisable();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_board, menu);
+        inflater.inflate(R.menu.time_line_menu, menu);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_disable_drag).setVisible(mBoardView.isDragEnabled());
-        menu.findItem(R.id.action_enable_drag).setVisible(!mBoardView.isDragEnabled());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_disable_drag:
-                mBoardView.setDragEnabled(false);
-                getActivity().invalidateOptionsMenu();
-                return true;
-            case R.id.action_enable_drag:
-                mBoardView.setDragEnabled(true);
-                getActivity().invalidateOptionsMenu();
-                return true;
-            case R.id.action_add_column:
-                addColumnList();
-                return true;
-            case R.id.action_remove_column:
-                mBoardView.removeColumn(0);
-                return true;
-            case R.id.action_clear_board:
-                mBoardView.clearBoard();
+//            case R.id.statistics:
+//                Toast.makeText(getActivity(), "Открыть статистику", Toast.LENGTH_SHORT).show();
+//                return true;
+            case R.id.info:
+                openIntro();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void addColumnList() {
-        final ArrayList<Pair<Long, String>> mItemArray = new ArrayList<>();
-        int addItems = 15;
-        for (int i = 0; i < addItems; i++) {
-            long id = sCreatedItems++;
-            mItemArray.add(new Pair<>(id, "Item " + id));
-        }
+    private void openIntro(){
+        DialogFragment introDialog = new IntroDialog();
+        introDialog.show(getActivity().getFragmentManager(), "test");
+    }
 
-        final int column = mColumns;
-        final ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.column_item, R.id.item_layout, true);
-        final View header = View.inflate(getActivity(), R.layout.column_header, null);
-        ((TextView) header.findViewById(R.id.text)).setText("Column " + (mColumns + 1));
-        ((TextView) header.findViewById(R.id.item_count)).setText("" + addItems);
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long id = sCreatedItems++;
-                Pair item = new Pair<>(id, "Test " + id);
-                mBoardView.addItem(column, 0, item, true);
-                //mBoardView.moveItem(4, 0, 0, true);
-                //mBoardView.removeItem(column, 0);
-                //mBoardView.moveItem(0, 0, 1, 3, false);
-                //mBoardView.replaceItem(0, 0, item1, true);
-                ((TextView) header.findViewById(R.id.item_count)).setText(String.valueOf(mItemArray.size()));
-            }
-        });
+    private void addFirstColumn(){
+        List<Card>cards = cardManager.getBottomCards();
+        addColumnList(cards, false);
+        if(cards.size()>0)
+        dragCardEntity = cards.get(0);
+    }
 
-        mBoardView.addColumnList(listAdapter, header, false);
+    private void addSecondColumn(){
+        addColumnList(cardManager.getTopCards(), true);
+    }
+
+    private void addColumnList(List<Card>cardList, boolean hasDate) {
+        final ItemAdapter listAdapter = new ItemAdapter(cardList, R.layout.column_item, R.id.item_layout, true);
+        listAdapter.setBorderViewListener(this);
+        listAdapter.setHasDate(hasDate);
+
+        secondColumnItemAdapter = listAdapter;
+        mBoardView.addColumnList(listAdapter, false);
         mColumns++;
     }
 
+    @Override
+    public int getResourceByString(String resName) {
+        return getResources().getIdentifier(resName, "drawable", getActivity().getPackageName());
+    }
+
+
+    @Override
+    public void correctDate() {
+        counter += 1;
+        Snackbar.make(mBoardView, CORRECT_ANSWER, Snackbar.LENGTH_SHORT).show();
+        setCardShirtImage();
+        if (counter > 4) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(VICTORY)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            startActivity(new Intent(getActivity(), getActivity().getClass()));
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            getActivity().finish();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+    }
+
+    @Override
+    public void errorDate(String text) {
+        Snackbar.make(mBoardView, text, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void setCardShirtImage() {
+        ivDeck.setImageResource(getResources().getIdentifier("shirt_00" + counter, "drawable", getActivity().getPackageName()));
+    }
+
+    @Override
+    public void refreshAdapter(int position) {
+
+    }
+
     private static class MyDragItem extends DragItem {
+        private Context activity;
 
         MyDragItem(Context context, int layoutId) {
             super(context, layoutId);
+            activity = context;
         }
 
         @Override
         public void onBindDragView(View clickedView, View dragView) {
-            CharSequence text = ((TextView) clickedView.findViewById(R.id.text)).getText();
-            ((TextView) dragView.findViewById(R.id.text)).setText(text);
+            dragView.findViewById(R.id.text).setVisibility(View.GONE);
+            int res = activity.getResources().getIdentifier(dragCardEntity.getImagePath(), "drawable", activity.getPackageName());
+            ImageView ivCardPic = ((ImageView)dragView.findViewById(R.id.iv_card_pic));
+            ivCardPic.setImageResource(res);
+            RelativeLayout.LayoutParams ivParams = (RelativeLayout.LayoutParams)ivCardPic.getLayoutParams();
+            ivParams.setMargins(0, -34, 0, 0);
+            TextView title = ((TextView) dragView.findViewById(R.id.title));
+            title.setText(dragCardEntity.getTitle());
+            title.setTextSize(11);
+            LinearLayout.LayoutParams tvParams = (LinearLayout.LayoutParams)title.getLayoutParams();
+            tvParams.setMargins(0, -110, 0, 0);
             CardView dragCard = ((CardView) dragView.findViewById(R.id.card));
             CardView clickedCard = ((CardView) clickedView.findViewById(R.id.card));
 

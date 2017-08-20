@@ -20,7 +20,9 @@ import butterknife.ButterKnife;
 import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.adapters.DragListAdapter;
 import ru.savchenko.andrey.timeline.adapters.NotDragListAdapter;
+import ru.savchenko.andrey.timeline.adapters.RecyclerListAdapter;
 import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
+import ru.savchenko.andrey.timeline.helper.SimpleItemTouchHelperCallback;
 import ru.savchenko.andrey.timeline.intefaces.Listener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
 
@@ -91,21 +93,21 @@ public class MainActivity extends AppCompatActivity implements Listener, OnStart
     }
 
     private void initTopRecyclerView() {
-//        RecyclerListAdapter adapter = new RecyclerListAdapter(this, this, cardManager.getTopCards());
-//        rvTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//
-//        rvTop.setHasFixedSize(true);
-//        rvTop.setAdapter(adapter);
-//
-//        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-//        mItemTouchHelper = new ItemTouchHelper(callback);
-//        mItemTouchHelper.attachToRecyclerView(rvTop);
-
+        RecyclerListAdapter adapter = new RecyclerListAdapter(this, this, cardManager.getTopCards());
         rvTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        topListAdapter = new NotDragListAdapter(cardManager.getTopCards(), this, cardManager, this);
-        rvTop.setAdapter(topListAdapter);
-        tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
-        rvTop.setOnDragListener(topListAdapter.getDragInstance());
+
+        rvTop.setHasFixedSize(true);
+        rvTop.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(rvTop);
+
+//        rvTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        topListAdapter = new NotDragListAdapter(cardManager.getTopCards(), this, cardManager, this);
+//        rvTop.setAdapter(topListAdapter);
+//        tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
+//        rvTop.setOnDragListener(topListAdapter.getDragInstance());
     }
 
     private void initBottomRecyclerView() {

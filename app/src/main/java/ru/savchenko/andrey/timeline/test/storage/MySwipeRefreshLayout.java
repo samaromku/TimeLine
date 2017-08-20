@@ -1,4 +1,4 @@
-package ru.savchenko.andrey.timeline.test;
+package ru.savchenko.andrey.timeline.test.storage;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

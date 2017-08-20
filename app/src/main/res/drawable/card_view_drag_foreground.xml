@@ -20,9 +20,7 @@
     android:insetTop="30dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <shape>
-        <stroke
-            android:color="@color/app_color"
-            android:width="2dp"/>
+        <!--<stroke android:width="2dp"/>-->
         <corners android:radius="3dp"/>
     </shape>
 </inset>

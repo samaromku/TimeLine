@@ -36,8 +36,10 @@ public class DragListener implements View.OnDragListener {
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_LOCATION:
                 if (v.getX() == listener.getRvTopPositionX() && v.getY() == listener.getRvTopPositionY()) {
+                    Log.i(TAG, "onDrag: herrrrrrrrr");
                     listener.onViewLocation("center");
                 } else {
+                    Log.i(TAG, "onDrag: 123");
                     listener.onViewLocation("");
                 }
                 break;

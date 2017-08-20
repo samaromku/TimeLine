@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Линия времени</string>
-    <string name="time_line">Линия времени</string>
+    <string name="app_name">TimeSpot</string>
+    <string name="time_line">TimeSpot</string>
     <string name="place_card">Укажите карте место</string>
     <string name="location_text">Карта будет добавлена в конец списка</string>
     <string name="cards_shirt">Рубашка</string>
@@ -14,4 +14,6 @@
     <string name="action_grid_horizontal">Grid horizontal (drag on long press)</string>
     <string name="ok">дальше</string>
     <string name="cancel">выйти</string>
+    <string name="statistics">Статистика</string>
+    <string name="info">Инструкция</string>
 </resources>
