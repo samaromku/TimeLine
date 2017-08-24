@@ -8,7 +8,7 @@ import java.util.List;
 import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
 import ru.savchenko.andrey.timeline.intefaces.Listener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 
 /**
  * Created by Andrey on 12.08.2017.

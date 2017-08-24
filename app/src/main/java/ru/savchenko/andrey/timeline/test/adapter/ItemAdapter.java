@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.intefaces.BorderViewListener;
 import ru.savchenko.andrey.timeline.lib.DragItemAdapter;
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 import ru.savchenko.andrey.timeline.test.storage.DateChecker;
 import ru.savchenko.andrey.timeline.test.storage.Utils;
 

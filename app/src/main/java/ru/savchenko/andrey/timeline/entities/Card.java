@@ -1,4 +1,4 @@
-package ru.savchenko.andrey.timeline.models;
+package ru.savchenko.andrey.timeline.entities;
 
 /**
  * Created by Andrey on 12.08.2017.

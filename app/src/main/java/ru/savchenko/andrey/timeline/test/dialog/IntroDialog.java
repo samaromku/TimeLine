@@ -30,7 +30,7 @@ public class IntroDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         getDialog().setTitle("Приветствие");
-        View view = inflater.inflate(R.layout.intro_dialog, container);
+        View view = inflater.inflate(R.layout.dialog_intro, container);
         TextView tvIntro = (TextView) view.findViewById(R.id.tvDialog);
         tvIntro.setText(introText);
         return view;

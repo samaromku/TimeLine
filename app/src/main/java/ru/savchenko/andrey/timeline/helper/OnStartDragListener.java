@@ -18,6 +18,8 @@ package ru.savchenko.andrey.timeline.helper;
 
 import android.support.v7.widget.RecyclerView;
 
+import ru.savchenko.andrey.timeline.entities.Player;
+
 /**
  * Listener for manual initiation of a drag.
  */
@@ -28,6 +30,6 @@ public interface OnStartDragListener {
      *
      * @param viewHolder The holder of the view to drag.
      */
-    void onStartDrag(RecyclerView.ViewHolder viewHolder);
+    void onStartDrag(RecyclerView.ViewHolder viewHolder, Player player);
 
 }

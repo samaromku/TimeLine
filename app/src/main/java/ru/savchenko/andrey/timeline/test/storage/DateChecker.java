@@ -6,7 +6,7 @@ import java.util.List;
 
 import ru.savchenko.andrey.timeline.intefaces.BorderViewListener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 
 import static android.content.ContentValues.TAG;
 import static ru.savchenko.andrey.timeline.storage.Const.NOT_CORRECT_ANSWER;

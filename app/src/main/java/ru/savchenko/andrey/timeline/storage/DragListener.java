@@ -13,7 +13,7 @@ import ru.savchenko.andrey.timeline.adapters.DragListAdapter;
 import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
 import ru.savchenko.andrey.timeline.intefaces.Listener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 
 import static android.content.ContentValues.TAG;
 import static ru.savchenko.andrey.timeline.storage.Const.NOT_CORRECT_ANSWER;

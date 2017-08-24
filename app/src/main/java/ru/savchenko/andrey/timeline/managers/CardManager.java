@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 
 import static android.content.ContentValues.TAG;
 

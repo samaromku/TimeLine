@@ -8,5 +8,10 @@ public interface Const {
     String MAIN_TITLE = "Линия времени";
     String NOT_CORRECT_ANSWER = "Вы ответили неверно";
     String CORRECT_ANSWER = "Вы ответили правильно";
-    String VICTORY = "Победа!!!";
+    String VICTORY = "Победитель: ";
+    String SETTINGS= "Настройки";
+    String CANCEL= "Отмена";
+    String ACCEPT = "Принять";
+    String CHOOSE_COLOR = "Выбрать цвет";
+    String PLAYER_COUNTER = "playerCounter";
 }

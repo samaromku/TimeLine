@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,11 +17,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.savchenko.andrey.timeline.R;
-import ru.savchenko.andrey.timeline.adapters.DragListAdapter;
 import ru.savchenko.andrey.timeline.adapters.NotDragListAdapter;
-import ru.savchenko.andrey.timeline.adapters.RecyclerListAdapter;
-import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
-import ru.savchenko.andrey.timeline.helper.SimpleItemTouchHelperCallback;
 import ru.savchenko.andrey.timeline.intefaces.Listener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
 
@@ -30,7 +25,7 @@ import static ru.savchenko.andrey.timeline.storage.Const.CORRECT_ANSWER;
 import static ru.savchenko.andrey.timeline.storage.Const.MAIN_TITLE;
 import static ru.savchenko.andrey.timeline.storage.Const.VICTORY;
 
-public class MainActivity extends AppCompatActivity implements Listener, OnStartDragListener {
+public class MainActivity extends AppCompatActivity implements Listener {
     public static final String TAG = "MainActivity";
     @BindView(R.id.rvTop)
     RecyclerView rvTop;
@@ -93,15 +88,15 @@ public class MainActivity extends AppCompatActivity implements Listener, OnStart
     }
 
     private void initTopRecyclerView() {
-        RecyclerListAdapter adapter = new RecyclerListAdapter(this, this, cardManager.getTopCards());
-        rvTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        rvTop.setHasFixedSize(true);
-        rvTop.setAdapter(adapter);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(rvTop);
+//        PlayersAdapter adapter = new PlayersAdapter(this, this, cardManager.getTopCards());
+//        rvTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//
+//        rvTop.setHasFixedSize(true);
+//        rvTop.setAdapter(adapter);
+//
+//        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+//        mItemTouchHelper = new ItemTouchHelper(callback);
+//        mItemTouchHelper.attachToRecyclerView(rvTop);
 
 //        rvTop.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //        topListAdapter = new NotDragListAdapter(cardManager.getTopCards(), this, cardManager, this);
@@ -113,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements Listener, OnStart
     private void initBottomRecyclerView() {
         rvBottom.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        DragListAdapter bottomListAdapter = new DragListAdapter(cardManager.getBottomCards(), this, cardManager, this);
-        rvBottom.setAdapter(bottomListAdapter);
-        tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
-        rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
+//        DragListAdapter bottomListAdapter = new DragListAdapter(cardManager.getBottomCards(), this, cardManager, this);
+//        rvBottom.setAdapter(bottomListAdapter);
+//        tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
+//        rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
     }
 
     @Override
@@ -174,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements Listener, OnStart
         return rvTop.getLayoutManager().getChildCount();
     }
 
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
-        Log.i(TAG, "onStartDrag: ");
-    }
+//    @Override
+//    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+//        mItemTouchHelper.startDrag(viewHolder);
+//        Log.i(TAG, "onStartDrag: ");
+//    }
 }

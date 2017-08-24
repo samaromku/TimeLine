@@ -16,4 +16,7 @@
     <string name="cancel">выйти</string>
     <string name="statistics">Статистика</string>
     <string name="info">Инструкция</string>
+    <string name="settings">Настройки</string>
+    <string name="accept">Принять</string>
+    <string name="btn_cancel">Отменить</string>
 </resources>

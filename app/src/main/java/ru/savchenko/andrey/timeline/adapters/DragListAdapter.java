@@ -10,7 +10,7 @@ import java.util.List;
 import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
 import ru.savchenko.andrey.timeline.intefaces.Listener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 
 public class DragListAdapter extends BaseListAdapter implements View.OnTouchListener {
     public DragListAdapter(List<Card> list, Listener listener, CardManager cardManager, OnStartDragListener onStartDragListener) {

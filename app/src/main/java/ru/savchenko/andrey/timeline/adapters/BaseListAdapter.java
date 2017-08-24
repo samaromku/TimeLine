@@ -17,7 +17,7 @@ import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
 import ru.savchenko.andrey.timeline.intefaces.Listener;
 import ru.savchenko.andrey.timeline.managers.CardManager;
-import ru.savchenko.andrey.timeline.models.Card;
+import ru.savchenko.andrey.timeline.entities.Card;
 import ru.savchenko.andrey.timeline.storage.DragListener;
 
 /**
