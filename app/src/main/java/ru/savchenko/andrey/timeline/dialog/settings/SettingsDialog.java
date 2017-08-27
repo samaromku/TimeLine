@@ -1,14 +1,12 @@
-package ru.savchenko.andrey.timeline.test.dialog;
+package ru.savchenko.andrey.timeline.dialog.settings;
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +15,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,22 +24,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.adapters.PlayersAdapter;
+import ru.savchenko.andrey.timeline.dialog.settings.presenter.SettingsPresenter;
+import ru.savchenko.andrey.timeline.dialog.settings.presenter.SettingsPresenterImpl;
+import ru.savchenko.andrey.timeline.dialog.settings.view.SettingsView;
 import ru.savchenko.andrey.timeline.entities.Player;
-import ru.savchenko.andrey.timeline.entities.PlayerCounter;
-import ru.savchenko.andrey.timeline.helper.OnStartDragListener;
 import ru.savchenko.andrey.timeline.helper.SimpleItemTouchHelperCallback;
-import ru.savchenko.andrey.timeline.intefaces.ChangePlayersListener;
-import ru.savchenko.andrey.timeline.intefaces.ItemClickListenter;
 import ru.savchenko.andrey.timeline.intefaces.OnSettingsListener;
-import ru.savchenko.andrey.timeline.managers.PlayersManager;
-import ru.savchenko.andrey.timeline.repository.CounterSpec;
-import ru.savchenko.andrey.timeline.repository.PlayersSpec;
-import ru.savchenko.andrey.timeline.test.storage.Utils;
+import ru.savchenko.andrey.timeline.storage.Utils;
 import ru.savchenko.andrey.timeline.views.SeekBarWithText;
 
-import static android.content.ContentValues.TAG;
 import static ru.savchenko.andrey.timeline.storage.Const.ACCEPT;
 import static ru.savchenko.andrey.timeline.storage.Const.CANCEL;
+import static ru.savchenko.andrey.timeline.storage.Const.CHANGE_PLAYER_NAME;
 import static ru.savchenko.andrey.timeline.storage.Const.CHOOSE_COLOR;
 import static ru.savchenko.andrey.timeline.storage.Const.SETTINGS;
 
@@ -52,26 +43,17 @@ import static ru.savchenko.andrey.timeline.storage.Const.SETTINGS;
  * Created by Andrey on 21.08.2017.
  */
 
-public class SettingsDialog extends DialogFragment implements OnStartDragListener, ItemClickListenter, ChangePlayersListener {
+public class SettingsDialog extends DialogFragment implements SettingsView {
     @BindView(R.id.sbPlayers) SeekBarWithText sbPlayers;
     @BindView(R.id.tvPlayerCount) TextView tvPlayerCount;
-    @BindView(R.id.rvPlayers)
-    RecyclerView rvPlayers;
-    private PlayersManager playersManager;
-    private int counter = Utils.getCounter();
+    @BindView(R.id.rvPlayers) RecyclerView rvPlayers;
     private OnSettingsListener onSettingsListener;
     private ItemTouchHelper mItemTouchHelper;
     private PlayersAdapter adapter;
-    private List<Player>players = new ArrayList<>();
-    private PlayersSpec playersSpec = new PlayersSpec();
+    private SettingsPresenter presenter;
 
     public void setOnSettingsListener(OnSettingsListener onSettingsListener) {
         this.onSettingsListener = onSettingsListener;
-    }
-
-    public void setPlayersManager(PlayersManager playersManager) {
-        this.playersManager = playersManager;
-
     }
 
     @OnClick(R.id.btn_cancel)
@@ -82,14 +64,18 @@ public class SettingsDialog extends DialogFragment implements OnStartDragListene
     @OnClick(R.id.btn_ok)
     void onOk() {
         getDialog().dismiss();
+        presenter.onAcceptClick();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
+    @Override
+    public void onAccept(int counter) {
         onSettingsListener.onAccept(counter);
-        CounterSpec counterSpec = new CounterSpec();
-        PlayerCounter playerCounter = counterSpec.getCounter();
-        if(playerCounter!=null) {
-            Log.i(TAG, "onOk: " + playerCounter);
-            counterSpec.setCounter(playerCounter, counter);
-        }
-        playersSpec.addPlayers(players);
     }
 
     @Nullable
@@ -97,27 +83,22 @@ public class SettingsDialog extends DialogFragment implements OnStartDragListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         getDialog().setTitle(SETTINGS);
         View view = inflater.inflate(R.layout.dialog_settings, container);
-//        getCounter();
         ButterKnife.bind(this, view);
+        presenter = new SettingsPresenterImpl(this);
         initRvList();
         init();
         return view;
     }
 
-//    private void getCounter() {
-//        CounterSpec counterSpec = new CounterSpec();
-//        PlayerCounter playerCounter = counterSpec.getCounter();
-//        if(playerCounter==null){
-//            counterSpec.saveCounter(new PlayerCounter(1,1));
-//            counter = 1;
-//        }else {
-//            counter = playerCounter.getCounter();
-//        }
-//    }
+    @Override
+    public void refreshAdapter(List<Player> players) {
+        adapter.setPlayerList(players);
+        adapter.notifyDataSetChanged();
+    }
 
     private void initRvList(){
         adapter = new PlayersAdapter(this);
-        addListToAdapter(counter);
+        presenter.addListInAdapter(Utils.getCounter());
         adapter.setClickListenter(this);
         adapter.setOnEditNameListener(this);
         rvPlayers.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -130,25 +111,15 @@ public class SettingsDialog extends DialogFragment implements OnStartDragListene
         mItemTouchHelper.attachToRecyclerView(rvPlayers);
     }
 
-    private void addListToAdapter(int count){
-        players.clear();
-        for (int i = 0; i < count; i++) {
-            players.add(playersManager.getPlayers().get(i));
-        }
-        adapter.setPlayerList(players);
-        adapter.notifyDataSetChanged();
-
-    }
-
     private void init() {
-        tvPlayerCount.setText(getPlayersCount(counter));
-        sbPlayers.setProgress(counter*10);
+        tvPlayerCount.setText(getPlayerNameWithCounter(Utils.getCounter()));
+        sbPlayers.setProgress(Utils.getCounter()*10);
         sbPlayers.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int count = progress / 10;
-                tvPlayerCount.setText(getPlayersCount(count));
-                addListToAdapter(count);
+                tvPlayerCount.setText(getPlayerNameWithCounter(count));
+                presenter.addListInAdapter(count);
             }
 
             @Override
@@ -158,15 +129,17 @@ public class SettingsDialog extends DialogFragment implements OnStartDragListene
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (seekBar.getProgress() < 10) {
-                    seekBar.setProgress(10);
-                }
-                counter = seekBar.getProgress() / 10;
+                presenter.checkProgress(seekBar.getProgress());
             }
         });
     }
 
-    private String getPlayersCount(int count) {
+    @Override
+    public void setSeekBarProgress(int progress) {
+        sbPlayers.setProgress(progress);
+    }
+
+    private String getPlayerNameWithCounter(int count) {
         if (count == 1) {
             return count + " игрок";
         } else if (count == 2 || count == 3 || count == 4) {
@@ -189,24 +162,9 @@ public class SettingsDialog extends DialogFragment implements OnStartDragListene
                 .initialColor(player.getColor())
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
-                .setOnColorSelectedListener(new OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(int selectedColor) {
-//                        Toast.makeText(getActivity(), "selected" + selectedColor, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .setPositiveButton(ACCEPT, new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        changeBackgroundColor(selectedColor, player);
-                    }
-                })
-                .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        changeBackgroundColor(player.getColor(), player);
-                    }
-                })
+                .setOnColorSelectedListener(selectedColor -> {})
+                .setPositiveButton(ACCEPT, (dialog, selectedColor, allColors) -> changeBackgroundColor(selectedColor, player))
+                .setNegativeButton(CANCEL, (dialog, which) -> changeBackgroundColor(player.getColor(), player))
                 .build()
                 .show();
     }
@@ -218,33 +176,25 @@ public class SettingsDialog extends DialogFragment implements OnStartDragListene
     }
 
     @Override
-    public void onEditName(int position) {
-        final Player player = players.get(position);
+    public void changePlayerName(String name) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         final EditText edittext = new EditText(getActivity());
-        edittext.setText(player.getName());
-        alert.setTitle("Изменить имя игрока");
+        edittext.setText(name);
+        alert.setTitle(CHANGE_PLAYER_NAME);
         alert.setView(edittext);
-
-        alert.setPositiveButton(ACCEPT, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //What ever you want to do with the value
-                player.setName(edittext.getText().toString());
-//                new PlayersSpec().setPlayerName(player.getId(), edittext.getText().toString());
-                adapter.notifyDataSetChanged();
-            }
+        alert.setPositiveButton(ACCEPT, (dialog, whichButton) -> {
+            presenter.setPlayerName(edittext.getText().toString());
+            adapter.notifyDataSetChanged();
         });
 
-        alert.setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
+        alert.setNegativeButton(CANCEL, (dialog, whichButton) -> {
 
-            }
         });
         alert.show();
     }
 
     @Override
-    public void swapPlayers(int fromPosition, int toPosition) {
-//        Collections.swap(players, fromPosition, toPosition);
+    public void onEditName(int position) {
+        presenter.changePlayerName(position);
     }
 }

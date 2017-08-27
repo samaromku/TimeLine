@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ru.savchenko.andrey.timeline.test.activities;
+package ru.savchenko.andrey.timeline.activities;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.intefaces.ChangeToolbarColor;
-import ru.savchenko.andrey.timeline.test.fragments.TimeLineFragment;
+import ru.savchenko.andrey.timeline.fragments.mainfragment.TimeLineFragment;
 
 public class TimeLineActivity extends AppCompatActivity implements ChangeToolbarColor{
 
@@ -53,5 +53,11 @@ public class TimeLineActivity extends AppCompatActivity implements ChangeToolbar
     public void changeToolbarColor(int color) {
         if (getSupportActionBar()==null)return;
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+    }
+
+    @Override
+    public void changeTitle(String name) {
+        if(getSupportActionBar()!=null)
+        getSupportActionBar().setTitle(name);
     }
 }

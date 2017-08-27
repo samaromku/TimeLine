@@ -1,4 +1,4 @@
-package ru.savchenko.andrey.timeline.test.storage;
+package ru.savchenko.andrey.timeline.storage;
 
 import android.util.Log;
 

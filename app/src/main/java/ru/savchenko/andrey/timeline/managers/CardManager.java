@@ -114,7 +114,7 @@ public class CardManager {
         allCardList.add(new Card(4, 1715, "Создание складного зонта", "", "umbrella"));
         allCardList.add(new Card(5, 1903, "Первый полет самолета", "17 декабря", "air_plane"));
         allCardList.add(new Card(6, 1929, "Первый телевизор", "", "tv"));
-        allCardList.add(new Card(7, 1964, "Компьютерная мышь", "", "mouse"));
+        allCardList.add(new Card(7, 1970, "Компьютерная мышь", "", "mouse"));
         allCardList.add(new Card(9, 1973, "Мобильный телефон", "", "mobile"));
         allCardList.add(new Card(10, 1940, "Первые колготки", "", "tights"));
         allCardList.add(new Card(11, 1769, "Изобретение паровоза", "", "locomotive"));
@@ -156,5 +156,25 @@ public class CardManager {
         allCardList.add(new Card(48, 1982, "Первый ноутбук", "", "notebook"));
         allCardList.add(new Card(49, 1901, "Лейкопластырь", "", "leikoplast"));
         allCardList.add(new Card(50, 1853, "Первый шприц", "", "shpric"));
+        allCardList.add(new Card(51, 1969, "Возникновение интернета", "", "inthernet"));
+        allCardList.add(new Card(52, 1440, "Печатный станок", "", "print"));
+        allCardList.add(new Card(53, 1637, "Первая газета", "", "newspaper"));
+        allCardList.add(new Card(54, 1940, "Первый макдональдс", "", "macdonalds"));
+        allCardList.add(new Card(55, 1949, "Первый телесериал", "", "tele_serial"));
+        allCardList.add(new Card(56, 1284, "Изобретение очков", "", "glasses"));
+        allCardList.add(new Card(57, 1939, "Первый комикс марвел", "", "marvel"));
+        allCardList.add(new Card(58, 1947, "Автомат калашникова", "", "kalash"));
+        allCardList.add(new Card(59, 1838, "Первый противогаз", "", "protivogaz"));
+        allCardList.add(new Card(60, 1968, "Первая беговая дорожка", "", "run_road"));
+        allCardList.add(new Card(62, 1853, "Изобретение чипсов", "", "chips"));
+        allCardList.add(new Card(63, 1943, "Аэрозольный балончик", "", "air_baloon"));
+        allCardList.add(new Card(64, 1743, "Изобретение роликов", "", "rolls"));
+        allCardList.add(new Card(65, 1600, "Понятие электричества", "", "electricity"));
+        allCardList.add(new Card(66, 1868, "Первый светофор", "", "svetofor"));
+        allCardList.add(new Card(67, 1828, "Первый трамвай", "", "tram"));
+        allCardList.add(new Card(68, 1863, "Первая линия метро", "", "metro"));
+        allCardList.add(new Card(69, 1492, "Открытие Америки", "", "america"));
+        allCardList.add(new Card(70, 1044, "Открытие пороха", "", "poroh"));
+        allCardList.add(new Card(71, 1801, "Отмена рабства", "", "rab"));
     }
 }

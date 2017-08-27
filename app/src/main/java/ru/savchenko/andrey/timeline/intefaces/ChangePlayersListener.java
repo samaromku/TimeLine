@@ -6,6 +6,4 @@ package ru.savchenko.andrey.timeline.intefaces;
 
 public interface ChangePlayersListener {
     void onEditName(int position);
-
-    void swapPlayers(int fromPosition, int toPosition);
 }

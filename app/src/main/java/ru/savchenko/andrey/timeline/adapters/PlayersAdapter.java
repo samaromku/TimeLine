@@ -122,11 +122,8 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ItemView
 
         sourcePlayer.setPosition(toPosition);
         targetPlayer.setPosition(fromPosition);
-//        playersSpec.setPlayerPosition(sourcePlayer.getId(), toPosition);
-//        playersSpec.setPlayerPosition(targetPlayer.getId(), fromPosition);
 
         Collections.swap(playerList, fromPosition, toPosition);
-        onEditNameListener.swapPlayers(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
 
 

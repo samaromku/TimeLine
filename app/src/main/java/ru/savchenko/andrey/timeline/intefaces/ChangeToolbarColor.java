@@ -6,4 +6,6 @@ package ru.savchenko.andrey.timeline.intefaces;
 
 public interface ChangeToolbarColor {
     void changeToolbarColor(int color);
+
+    void changeTitle(String name);
 }

@@ -14,4 +14,8 @@ public interface Const {
     String ACCEPT = "Принять";
     String CHOOSE_COLOR = "Выбрать цвет";
     String PLAYER_COUNTER = "playerCounter";
+    String MOVE = "Ходит ";
+    String SETTINGS_FRAGMENT = "settingsFragment ";
+    String INTRO_FRAGMENT = "introFragment ";
+    String CHANGE_PLAYER_NAME = "Изменить имя игрока";
 }

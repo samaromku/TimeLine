@@ -1,4 +1,4 @@
-package ru.savchenko.andrey.timeline.test.dialog;
+package ru.savchenko.andrey.timeline.dialog;
 
 import android.app.DialogFragment;
 import android.os.Bundle;

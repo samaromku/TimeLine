@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ru.savchenko.andrey.timeline.test.adapter;
+package ru.savchenko.andrey.timeline.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +30,8 @@ import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.intefaces.BorderViewListener;
 import ru.savchenko.andrey.timeline.lib.DragItemAdapter;
 import ru.savchenko.andrey.timeline.entities.Card;
-import ru.savchenko.andrey.timeline.test.storage.DateChecker;
-import ru.savchenko.andrey.timeline.test.storage.Utils;
+import ru.savchenko.andrey.timeline.storage.DateChecker;
+import ru.savchenko.andrey.timeline.storage.Utils;
 
 public class ItemAdapter extends DragItemAdapter<Card, ItemAdapter.ViewHolder> {
 
