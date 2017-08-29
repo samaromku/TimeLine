@@ -158,7 +158,8 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
 
     @Override
     public void addColumnList(List<Card> cardList, boolean hasDate) {
-        final ItemAdapter listAdapter = new ItemAdapter(cardList, R.layout.column_item, R.id.item_layout, true);
+        //подсказка если true то по longclick, если false, то по онтач
+        final ItemAdapter listAdapter = new ItemAdapter(cardList, R.layout.column_item, R.id.item_layout, false);
         listAdapter.setBorderViewListener(this);
         listAdapter.setHasDate(hasDate);
         secondColumnItemAdapter = listAdapter;
