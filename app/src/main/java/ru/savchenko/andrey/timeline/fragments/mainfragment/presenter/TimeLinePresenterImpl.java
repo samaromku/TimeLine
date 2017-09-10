@@ -16,9 +16,9 @@ public class TimeLinePresenterImpl implements TimeLinePresenter, TimeLineInterac
     private TimeLineView view;
     private TimeLineInteractor interactor;
 
-    public TimeLinePresenterImpl(TimeLineView view) {
+    public TimeLinePresenterImpl(TimeLineView view, int counter) {
         this.view = view;
-        this.interactor = new TimeLineInteractorImpl(this);
+        this.interactor = new TimeLineInteractorImpl(this, counter);
     }
 
     @Override

@@ -1,16 +1,10 @@
 package ru.savchenko.andrey.timeline.storage;
 
-import android.util.Log;
-
-import java.util.List;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import ru.savchenko.andrey.timeline.entities.Card;
-import ru.savchenko.andrey.timeline.entities.Player;
-import ru.savchenko.andrey.timeline.entities.PlayerCounter;
-import ru.savchenko.andrey.timeline.repository.CounterSpec;
-import ru.savchenko.andrey.timeline.repository.PlayersSpec;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Andrey on 20.08.2017.
@@ -18,6 +12,8 @@ import static android.content.ContentValues.TAG;
 
 public class Utils {
     public static Card dragCardEntity;
+    private static SharedPreferences sp;
+    private static SharedPreferences.Editor editor;
 
     public static String getDateString(int date) {
         if (date >= 0) {
@@ -31,24 +27,32 @@ public class Utils {
         }
     }
 
-    public static void addPlayerCounter(int counter, List<Player>players){
-        CounterSpec counterSpec = new CounterSpec();
-        PlayerCounter playerCounter = counterSpec.getCounter();
-        if(playerCounter!=null) {
-            Log.i(TAG, "onOk: " + playerCounter);
-            counterSpec.setCounter(playerCounter, counter);
-        }
-        new PlayersSpec().addPlayers(players);
+    public static void init(Context context){
+        sp = context.getSharedPreferences("prefs", Activity.MODE_PRIVATE);
+        editor = sp.edit();
     }
 
-    public static int getCounter() {
-        CounterSpec counterSpec = new CounterSpec();
-        PlayerCounter playerCounter = counterSpec.getCounter();
-        if(playerCounter==null){
-            counterSpec.saveCounter(new PlayerCounter(1,1));
+    public static void saveCounter(int counter){
+        editor.putInt("counter", counter);
+        editor.apply();
+    }
+
+    public static int loadCounter(){
+        int counter = sp.getInt("counter",0);
+        if(counter==0){
             return 1;
         }else {
-            return playerCounter.getCounter();
+            return counter;
         }
     }
+
+    public static void saveCategory(int category){
+        editor.putInt("category", category);
+        editor.apply();
+    }
+
+    public static int loadCategory(){
+        return sp.getInt("category",0);
+    }
+
 }

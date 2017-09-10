@@ -45,6 +45,8 @@ import ru.savchenko.andrey.timeline.fragments.mainfragment.presenter.TimeLinePre
 import ru.savchenko.andrey.timeline.fragments.mainfragment.view.TimeLineView;
 import ru.savchenko.andrey.timeline.intefaces.ChangeToolbarColor;
 import ru.savchenko.andrey.timeline.lib.BoardView;
+import ru.savchenko.andrey.timeline.storage.Const;
+import ru.savchenko.andrey.timeline.storage.Utils;
 
 import static android.content.ContentValues.TAG;
 import static ru.savchenko.andrey.timeline.storage.Const.CORRECT_ANSWER;
@@ -58,7 +60,7 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
     private BoardView mBoardView;
     private ItemAdapter secondColumnItemAdapter;
     private ImageView ivDeck;
-//    TextView tvPlayerMove;
+    //    TextView tvPlayerMove;
 //    CardView cvPlayerMove;
     private ChangeToolbarColor changeToolbarColor;
     private TimeLinePresenter presenter;
@@ -92,12 +94,11 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
         ivDeck = (ImageView) getActivity().findViewById(R.id.deck);
         mBoardView = (BoardView) view.findViewById(R.id.board_view);
 
-        presenter = new TimeLinePresenterImpl(this);
+        presenter = new TimeLinePresenterImpl(this, Utils.loadCounter());
 
         mBoardView.setSnapToColumnsWhenScrolling(true);
         mBoardView.setSnapToColumnWhenDragging(true);
         mBoardView.setSnapDragItemToTouch(true);
-
 
 
         mBoardView.setCustomDragItem(new MyDragItem(getActivity(), R.layout.column_item));
@@ -153,7 +154,6 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
         presenter.initColumns();
         mBoardView.setListDragDisable();
     }
-
 
 
     @Override
@@ -227,6 +227,7 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
 
     @Override
     public int getResourceByString(String resName) {
+        Log.i(TAG, "getResourceByString: " + resName);
         return getResources().getIdentifier(resName, "drawable", getActivity().getPackageName());
     }
 
@@ -249,6 +250,24 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
     @Override
     public void correctDate() {
         presenter.addPlayerPositionAndNext();
+    }
+
+    @Override
+    public void setImage(ImageView image, String res) {
+        int category = Utils.loadCategory();
+        switch (category){
+            case Const.ALL_CAT:
+                break;
+            case Const.LITRA_CAT:
+                image.setImageResource(getResources().getIdentifier("litra_" + res, "drawable", getActivity().getPackageName()));
+                break;
+            case Const.RUSSIA_CAT:
+                image.setImageResource(getResources().getIdentifier("rus_" + res, "drawable", getActivity().getPackageName()));
+                break;
+            case Const.CINEMA_CAT:
+                image.setImageResource(getResources().getIdentifier("cinema_" + res, "drawable", getActivity().getPackageName()));
+                break;
+        }
 
     }
 
@@ -258,11 +277,11 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
     }
 
 
-
     @Override
     public void refreshAdapter(int position) {
 
     }
+
 
     @Override
     public void onAccept(int counter) {

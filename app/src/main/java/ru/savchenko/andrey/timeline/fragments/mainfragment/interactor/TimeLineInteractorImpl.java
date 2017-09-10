@@ -1,9 +1,10 @@
 package ru.savchenko.andrey.timeline.fragments.mainfragment.interactor;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import ru.savchenko.andrey.timeline.entities.Card;
 import ru.savchenko.andrey.timeline.entities.Player;
 import ru.savchenko.andrey.timeline.managers.CardManager;
@@ -16,12 +17,14 @@ import ru.savchenko.andrey.timeline.storage.Utils;
  */
 
 public class TimeLineInteractorImpl implements TimeLineInteractor {
+    private static final String TAG = "TimeLineInteractorImpl";
     private CardManager cardManager = new CardManager();
     private Map<Integer, Integer> playerCardsMap;
-    private int playersCounter = Utils.getCounter();
+    private int playersCounter;
     private int currentPlayerPosition;
     private PlayersManager playersManager = new PlayersManager();
     private TimeLineInteractor.OnChangeCard onChangeCard;
+    private PlayersSpec playersSpec = new PlayersSpec();
 
     @Override
     public PlayersManager getPlayerManager() {
@@ -31,10 +34,11 @@ public class TimeLineInteractorImpl implements TimeLineInteractor {
     @Override
     public void addPlayerPositionAndNext() {
         playerCardsMap.put(currentPlayerPosition, playerCardsMap.get(currentPlayerPosition) + 1);
-        onChangeCard.getPlayerByPosition(playerCardsMap.get(currentPlayerPosition), new PlayersSpec().getPlayerByPosition(currentPlayerPosition).getName());
+        onChangeCard.getPlayerByPosition(playerCardsMap.get(currentPlayerPosition), playersSpec.getPlayerByPosition(currentPlayerPosition).getName());
     }
 
-    public TimeLineInteractorImpl(OnChangeCard onChangeCard) {
+    public TimeLineInteractorImpl(OnChangeCard onChangeCard, int counter) {
+        this.playersCounter = counter;
         this.onChangeCard = onChangeCard;
 
     }
@@ -49,11 +53,13 @@ public class TimeLineInteractorImpl implements TimeLineInteractor {
 
     @Override
     public void addFirstColumn() {
-        List<Card> cards = cardManager.getBottomCards();
-        onChangeCard.addListColumn(cards, false);
-        if (cards.size() > 0) {
-            Utils.dragCardEntity = cards.get(0);
-        }
+        Single.just(cardManager.getBottomCards())
+                .map(cards1 -> {
+                    onChangeCard.addListColumn(cards1, false);
+                    return cards1;
+                })
+                .filter(cards1 -> cards1.size() > 0)
+                .subscribe(cards1 -> Utils.dragCardEntity = cards1.get(0), Throwable::printStackTrace);
     }
 
     @Override
@@ -61,31 +67,14 @@ public class TimeLineInteractorImpl implements TimeLineInteractor {
         onChangeCard.addListColumn(cardManager.getTopCards(), true);
     }
 
-    private void showNextPlayerName() {
-        if (currentPlayerPosition < playersCounter - 1) {
-            currentPlayerPosition = currentPlayerPosition + 1;
-        } else {
-            currentPlayerPosition = 0;
-        }
-        getPlayerAndSetName();
-    }
-
-    private void getPlayerAndSetName() {
-        Player player = new PlayersSpec().getPlayerByPosition(currentPlayerPosition);
-        if (player != null) {
-            onChangeCard.changePlayerColor(player.getColor());
-            onChangeCard.showPlayerName(player.getName());
-        }
-    }
 
     private void initPlayers() {
         playerCardsMap = new HashMap<>();
         playersManager.getPlayers();
-        List<Player> players = new PlayersSpec().getPlayers();
-        if (players.size() == 0) return;
-        for (int i = 0; i < playersCounter; i++) {
-            playerCardsMap.put(players.get(i).getPosition(), 0);
-        }
+        Observable.just(playersSpec.getPlayers())
+                .filter(players1 -> players1.size() != 0)
+                .flatMap(Observable::fromIterable)
+                .subscribe(o -> playerCardsMap.put(o.getPosition(), 0));
     }
 
     public void checkDate(int fromColumn) {
@@ -93,10 +82,32 @@ public class TimeLineInteractorImpl implements TimeLineInteractor {
         Utils.dragCardEntity = card;
         showNextPlayerName();
         onChangeCard.onAddItem(fromColumn, card);
-        if(playerCardsMap.size()==0){
+        if (playerCardsMap.size() == 0) {
             playerCardsMap.put(1, 1);
         }
         onChangeCard.onChangeImage(playerCardsMap.get(currentPlayerPosition));
+    }
+
+    private void showNextPlayerName() {
+        Single.just(currentPlayerPosition)
+                .map(integer -> integer < playersCounter - 1)
+                .subscribe(aBoolean ->
+                {
+                    if (aBoolean) {
+                        currentPlayerPosition = currentPlayerPosition + 1;
+                    } else {
+                        currentPlayerPosition = 0;
+                    }
+                }, Throwable::printStackTrace);
+        getPlayerAndSetName();
+    }
+
+    private void getPlayerAndSetName() {
+        Player player = playersSpec.getPlayerByPosition(currentPlayerPosition);
+        if (player != null) {
+            onChangeCard.changePlayerColor(player.getColor());
+            onChangeCard.showPlayerName(player.getName());
+        }
     }
 
 }

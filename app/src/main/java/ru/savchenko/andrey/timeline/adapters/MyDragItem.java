@@ -38,6 +38,7 @@ public class MyDragItem extends DragItem {
         Card dragCardEntity = Utils.dragCardEntity;
         Log.i(TAG, "onBindDragView: " + dragCardEntity);
         dragView.findViewById(R.id.text).setVisibility(View.GONE);
+        // TODO: 08.09.2017 replace if possible
         int res = activity.getResources().getIdentifier(dragCardEntity.getImagePath(), "drawable", activity.getPackageName());
         ImageView ivCardPic = ((ImageView) dragView.findViewById(R.id.iv_card_pic));
         ivCardPic.setImageResource(res);

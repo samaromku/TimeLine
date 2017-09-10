@@ -15,9 +15,9 @@ public class SettingsPresenterImpl implements SettingsPresenter, SettingsInterac
     private SettingsView view;
     private SettingsInteractor interactor;
 
-    public SettingsPresenterImpl(SettingsView view) {
+    public SettingsPresenterImpl(SettingsView view, int counter) {
         this.view = view;
-        this.interactor = new SettingsInteractorImpl(this);
+        this.interactor = new SettingsInteractorImpl(this, counter);
     }
 
     @Override

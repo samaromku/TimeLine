@@ -1,167 +1,56 @@
 package ru.savchenko.andrey.timeline.fragments.mainfragment;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.widget.ImageView;
+import android.content.Context;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import ru.savchenko.andrey.timeline.BuildConfig;
-import ru.savchenko.andrey.timeline.R;
-import ru.savchenko.andrey.timeline.activities.TimeLineActivity;
-import ru.savchenko.andrey.timeline.fragments.mainfragment.view.TimeLineView;
+import ru.savchenko.andrey.timeline.entities.Card;
+import ru.savchenko.andrey.timeline.intefaces.ChangeToolbarColor;
+import ru.savchenko.andrey.timeline.storage.Utils;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 /**
  * Created by Andrey on 26.08.2017.
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class, packageName = "ru.savchenko.andrey.timeline", sdk = 21)
 public class TimeLineFragmentTest {
-    private TimeLineActivity activity;
+
     private TimeLineFragment timeLineFragment = new TimeLineFragment();
-    private TimeLineView view = new TimeLineFragment();
+    private Context context;
 
     @Before
     public void setUp()throws Exception{
-        TimeLineActivity activity = Robolectric.buildActivity( TimeLineActivity.class )
-                .create()
-                .start()
-                .resume()
-                .get();
 
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add( timeLineFragment, null );
-        fragmentTransaction.commit();
-
-//        activity = Robolectric.setupActivity(TimeLineActivity.class);
-//        view = new TimeLineFragment();
-    }
-
-    private void startFragment(TimeLineFragment timeLineFragment) {
-
-    }
+        timeLineFragment.setChangeToolbarColor(mock(ChangeToolbarColor.class));
 
 
-    @Test
-    public void onCreate() throws Exception {
-
-    }
-
-    @Test
-    public void onCreateView() throws Exception {
-
-    }
-
-    @Test
-    public void onDestroy() throws Exception {
-
-    }
-
-    @Test
-    public void changeToolbarColor() throws Exception {
-
-    }
-
-    @Test
-    public void adapterCheckDate() throws Exception {
-
+        startFragment(timeLineFragment);
+        assertNotNull( timeLineFragment );
+        context = RuntimeEnvironment.application;
     }
 
     @Test
     public void addItem() throws Exception {
-
+        timeLineFragment.addItem(2, new Card(12, 1234, "test"));
     }
 
     @Test
-    public void setCardImage() throws Exception {
-        view.setCardImage(1);
-        ImageView ivDeck = (ImageView) activity.findViewById(R.id.iv_card_pic);
-        assertEquals(ivDeck.getResources(), activity.getResources().getIdentifier("shirt_00" + 1, "drawable", activity.getPackageName()));
+    public void testSaveCOnter(){
+        int counter = 0;
+        Utils.saveCounter(counter);
+        if(counter!=0) {
+            assertEquals(counter, Utils.loadCounter());
+        }else assertEquals(Utils.loadCounter(), 1);
     }
-
-    @Test
-    public void onActivityCreated() throws Exception {
-
-    }
-
-    @Test
-    public void addColumnList() throws Exception {
-
-    }
-
-    @Test
-    public void showPlayerName() throws Exception {
-
-    }
-
-
-
-    @Test
-    public void onCreateOptionsMenu() throws Exception {
-
-    }
-
-    @Test
-    public void onPrepareOptionsMenu() throws Exception {
-
-    }
-
-    @Test
-    public void onOptionsItemSelected() throws Exception {
-
-    }
-
-    @Test
-    public void openSettings() throws Exception {
-
-    }
-
-    @Test
-    public void openIntro() throws Exception {
-
-    }
-
-    @Test
-    public void getResourceByString() throws Exception {
-
-    }
-
-    @Test
-    public void upCounterOrVictory() throws Exception {
-
-    }
-
-    @Test
-    public void correctDate() throws Exception {
-
-    }
-
-    @Test
-    public void errorDate() throws Exception {
-
-    }
-
-    @Test
-    public void refreshAdapter() throws Exception {
-
-    }
-
-    @Test
-    public void onAccept() throws Exception {
-
-    }
-
-    @Test
-    public void onCancel() throws Exception {
-
-    }
-
 }

@@ -10,6 +10,7 @@ public class Card {
     private String title;
     private String description;
     private String imagePath;
+    private String category;
 
     public Card(int id, int year, String imagePath) {
         this.id = id;
@@ -23,6 +24,21 @@ public class Card {
         this.title = title;
         this.description = description;
         this.imagePath = imagePath;
+    }
+
+    public Card(int year, String title, String description, String imagePath) {
+        this.year = year;
+        this.title = title;
+        this.description = description;
+        this.imagePath = imagePath;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getTitle() {
@@ -73,6 +89,7 @@ public class Card {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", imagePath='" + imagePath + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import ru.savchenko.andrey.timeline.entities.Player;
 import ru.savchenko.andrey.timeline.managers.PlayersManager;
 import ru.savchenko.andrey.timeline.repository.PlayersSpec;
-import ru.savchenko.andrey.timeline.storage.Utils;
 
 /**
  * Created by Andrey on 25.08.2017.
@@ -14,23 +13,24 @@ import ru.savchenko.andrey.timeline.storage.Utils;
 
 public class SettingsInteractorImpl implements SettingsInteractor{
     private PlayersManager playersManager;
-    private int counter = Utils.getCounter();
+    private int counter;
     private List<Player> players;
     private PlayersSpec playersSpec;
     private OnChangesListener onChangesListener;
     private Player player;
 
-    public SettingsInteractorImpl(OnChangesListener onChangesListener) {
+    public SettingsInteractorImpl(OnChangesListener onChangesListener, int counter) {
         this.onChangesListener = onChangesListener;
         players = new ArrayList<>();
         playersSpec = new PlayersSpec();
         playersManager = new PlayersManager();
+        this.counter = counter;
     }
 
     @Override
     public void onOkPressed() {
+        playersSpec.addPlayers(players);
         onChangesListener.onAccept(counter);
-        Utils.addPlayerCounter(counter, players);
     }
 
     @Override

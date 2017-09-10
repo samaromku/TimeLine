@@ -30,6 +30,7 @@ import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.entities.Card;
 import ru.savchenko.andrey.timeline.intefaces.BorderViewListener;
 import ru.savchenko.andrey.timeline.lib.DragItemAdapter;
+import ru.savchenko.andrey.timeline.storage.Const;
 import ru.savchenko.andrey.timeline.storage.DateChecker;
 import ru.savchenko.andrey.timeline.storage.Utils;
 
@@ -75,7 +76,12 @@ public class ItemAdapter extends DragItemAdapter<Card, ItemAdapter.ViewHolder> {
             holder.date.setVisibility(View.GONE);
         }
         holder.title.setText(card.getTitle());
-        holder.ivCardImage.setImageResource(borderViewListener.getResourceByString(card.getImagePath()));
+        int category = Utils.loadCategory();
+        if(category==Const.ALL_CAT ){
+            holder.ivCardImage.setImageResource(borderViewListener.getResourceByString(card.getImagePath()));
+        }else{
+            borderViewListener.setImage(holder.ivCardImage, String.valueOf(card.getYear()));
+        }
         holder.itemView.setTag(mItemList.get(position));
 
     }
