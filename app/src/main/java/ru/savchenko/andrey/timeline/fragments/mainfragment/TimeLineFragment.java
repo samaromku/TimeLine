@@ -60,8 +60,6 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
     private BoardView mBoardView;
     private ItemAdapter secondColumnItemAdapter;
     private ImageView ivDeck;
-    //    TextView tvPlayerMove;
-//    CardView cvPlayerMove;
     private ChangeToolbarColor changeToolbarColor;
     private TimeLinePresenter presenter;
 
@@ -72,6 +70,7 @@ public class TimeLineFragment extends Fragment implements TimeLineView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         setHasOptionsMenu(true);
     }
 

@@ -21,23 +21,24 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import ru.savchenko.andrey.timeline.R;
 import ru.savchenko.andrey.timeline.intefaces.ChangeToolbarColor;
 import ru.savchenko.andrey.timeline.fragments.mainfragment.TimeLineFragment;
 
 public class TimeLineActivity extends AppCompatActivity implements ChangeToolbarColor{
+    public static final String TAG = "TimeLineActivity";
+    TimeLineFragment fragment = new TimeLineFragment();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_line);
 
-        if (savedInstanceState == null) {
-            TimeLineFragment fragment = new TimeLineFragment();
             fragment.setChangeToolbarColor(this);
             showFragment(fragment);
-        }
 
         if(getSupportActionBar()!=null) {
             getSupportActionBar().setTitle(R.string.app_name);

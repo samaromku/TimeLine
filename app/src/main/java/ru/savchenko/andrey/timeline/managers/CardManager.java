@@ -301,7 +301,6 @@ public class CardManager {
     private List<Card>russiaHistory(){
         List<Card>cardList = new ArrayList<>();
 
-        cardList.add(new Card(863, "﻿Кирилл и Мефодий создают письменность", "", ""));
         cardList.add(new Card(879, "Смерть князя Рюрика", "", ""));
         cardList.add(new Card(882, "Киев провозглашается столицей", "", ""));
         cardList.add(new Card(1118, "Повесть временных лет", "", ""));
@@ -373,7 +372,6 @@ public class CardManager {
     private List<Card>cinemaList(){
         List<Card>cardList = new ArrayList<>();
 
-        cardList.add(new Card(1934, "﻿Чапаев", "", ""));
         cardList.add(new Card(1937, "Белоснежка и семь гномов", "", ""));
         cardList.add(new Card(1939, "Унесённые ветром", "", ""));
         cardList.add(new Card(1940, "Филадельфийская история", "", ""));
